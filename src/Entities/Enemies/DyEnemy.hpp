@@ -7,11 +7,14 @@ class DyEnemy : public Enemy {
         float aimAngle = 225;
         bool loop = false;
         Rectangle spriteR;
+        int textureType;
 
     public:
         DyEnemy(float x, float y) : Enemy(x, y) { 
             this->cooldown = GetRandomValue(90, 300);
-            this->health = 1; 
+            this->health = 1;
+            this->scoreValue = 100;
+            this->textureType = GetRandomValue(1,2);
         
             if (GetRandomValue(0,1) == 0){spriteR = Rectangle{2,128,13,14};}
             else{spriteR = Rectangle{2,147,13,13};}

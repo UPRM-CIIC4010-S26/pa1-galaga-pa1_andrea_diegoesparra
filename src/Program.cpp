@@ -74,6 +74,10 @@ void Program::Update() {
         if (lives <= 0 && pauseFrames <= 0) gameOver = true;
         Projectile::CleanProjectiles();
         Projectile::ProjectileCollision();
+        if (Enemy::score >= LifeUp){
+            lives = std::min(lives + 1, 5);
+            LifeUp += 1000;
+        }
     }
 }
 
@@ -82,12 +86,22 @@ void Program::Draw() {
     background.Draw();
     if (pauseFrames <= 0 && !gameOver) player->draw();
     for (Animation& a : Animation::animations) a.draw();
+    float start = GetScreenWidth() - 150;
 
     for (int i = 0; i < lives; i++) {
-         DrawTexturePro(ImageManager::SpriteSheet, Rectangle{0, 0, 17, 18}, 
-                   Rectangle{10.0f + i * 30, GetScreenHeight() - 30.0f, 20, 20}, 
-                   Vector2{0, 0}, 0, WHITE);
+         DrawTexturePro(
+            ImageManager::SpriteSheet,
+            Rectangle {0,0, 17, 18},
+            Rectangle{start + i * 30, 10.0f, 20, 20},
+            Vector2{0,0},
+            0,
+            WHITE
+         );
     }
+
+    DrawText(("Score: " + std::to_string(Enemy::score)).c_str(), 10, 10, 24, WHITE);
+    DrawText("Lives ", GetScreenWidth() - 220, 10, 24, WHITE);
+
 
 
     for (Projectile p : Projectile::projectiles) p.draw();
@@ -101,10 +115,17 @@ void Program::Draw() {
 void Program::ManageEnemyRespawns() {
     delay = std::max(delay - 1, 0);
 
+<<<<<<< HEAD
     int speedBonus = score / 2000;
     respawnCooldown -= (1 + speedBonus);
+=======
+    int difficultyLevel = 1 + Enemy::score / 1000;
+    difficultyLevel = std::min(difficultyLevel, 6);
+
+    respawnCooldown -= difficultyLevel;
+>>>>>>> DebugPhase2
     if (respawnCooldown <= 0) {
-        respawnCooldown = 1080;
+        respawnCooldown = std::max(1080 - Enemy::score, 300);
         for (std::pair<std::pair<float, float>, Enemy*>& p : Enemy::enemies) {
             if (!p.second && p.first.second != 150) {
                 int eType = GetRandomValue(1, 3);
@@ -178,6 +199,10 @@ void Program::KeyInputs() {
     }
 
     if (!startup && !paused && !gameOver && pauseFrames <= 0) player->keyInputs();
+
+    if (IsKeyPressed('K')){
+        Enemy::score += 500;
+    }
    
 }
 
@@ -202,6 +227,8 @@ void Program::Reset() {
     count = 0;
     delay = 0;
     lives = 3;
+    Enemy::score = 0;
+    LifeUp = 1000;
 
     Enemy::enemies.push_back(std::pair<std::pair<float, float>, Enemy*> {
         std::pair<float, float>{350, 150},
