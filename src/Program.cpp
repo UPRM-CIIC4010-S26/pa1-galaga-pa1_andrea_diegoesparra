@@ -1,6 +1,9 @@
 #include "Program.hpp"
 
 Program::Program() {
+    
+    Enemy::scorePtr = &score;
+
     Background::sideWalls = std::pair<HitBox, HitBox>{ 
         HitBox(0, 0, 10, GetScreenHeight()), 
         HitBox(GetScreenWidth() - 10, 0, 10, GetScreenHeight())
@@ -184,6 +187,7 @@ void Program::PlayerReset() {
 }
 
 void Program::Reset() {
+    Enemy::scorePtr = &score;
     Enemy::enemies.clear();
     StdEnemy::attackInProgress = false;
     player = new Player((GetScreenWidth() / 2) - 15, GetScreenHeight() * 0.75f);
