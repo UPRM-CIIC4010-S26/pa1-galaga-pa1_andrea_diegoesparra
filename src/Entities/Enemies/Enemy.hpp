@@ -16,8 +16,6 @@ class Enemy {
         
     public:
         int health = 1;
-        inline static int score = 0;
-        int scoreValue = 0;
         std::pair<float, float> position;
         HitBox hitBox;
 
@@ -64,7 +62,6 @@ class Enemy {
                     }
 
                     if (p.second->health <= 0) {
-                        score += (p.second->scoreValue);
                         Animation::animations.push_back(
                             Animation(p.second->position.first, p.second->position.second, 155, 0, 33, 33, 30, 30, 4, ImageManager::SpriteSheet)
                         );
