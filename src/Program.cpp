@@ -70,14 +70,17 @@ void Program::Update() {
 
 void Program::Draw() {
     background.Draw();
+
+    DrawText(TextFormat("Score: %d", score), 10, 10, 24, WHITE);
+    DrawText(TextFormat("Lives: %d", lives), 10, 40, 24, RED);
+    
+
     if (pauseFrames <= 0 && !gameOver) player->draw();
     for (Animation& a : Animation::animations) a.draw();
 
-    for (int i = 0; i < lives; i++) {
-         DrawTexturePro(ImageManager::SpriteSheet, Rectangle{0, 0, 17, 18}, 
-                   Rectangle{10.0f + i * 30, GetScreenHeight() - 30.0f, 20, 20}, 
-                   Vector2{0, 0}, 0, WHITE);
-    }
+   for (int i = 0; i < lives; i++) {
+    DrawRectangle(10 + i * 30, GetScreenHeight() - 90, 20, 20, RED);
+}
 
 
     for (Projectile p : Projectile::projectiles) p.draw();
