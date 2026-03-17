@@ -19,8 +19,6 @@ class Program {
         int delay = 0;
         int lives = 3;
         int pauseFrames = 0;
-        int score = 0;
-        int nextLifeScore = 1000;
 
         bool startup = true;
         bool paused = false;
@@ -38,6 +36,6 @@ class Program {
         void KeyInputs();
         void PlayerReset();
         void Reset();
-        
+          
         ~Program() {}
 };

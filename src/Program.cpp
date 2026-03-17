@@ -25,10 +25,7 @@ Program::Program() {
             new StdEnemy(x, y)
         });
     }
-    score = 0;
-    nextLifeScore = 1000;
 }
-
 
 void Program::Update() {
     for (Animation& a : Animation::animations) a.update();
@@ -43,14 +40,8 @@ void Program::Update() {
         ManageEnemyRespawns();
         player->update();
 
-    if (score >= nextLifeScore) {
-        if (lives < 5) lives++;
-        nextLifeScore += 1000;
-}
-
         for (std::pair<std::pair<float, float>, Enemy*> p : Enemy::enemies) {
             if (p.second && HitBox::Collision(player->hitBox, p.second->hitBox)) {
-                score += 100;
                 Animation::animations.push_back(
                     Animation(player->position.first, player->position.second, 16, 0, 33, 34, 30 ,30, 3, ImageManager::SpriteSheet)
                 );
@@ -78,7 +69,6 @@ void Program::Update() {
 }
 
 void Program::Draw() {
-    DrawText(TextFormat("SCORE: %i", score), 20, 20, 30, RAYWHITE);
     background.Draw();
     if (pauseFrames <= 0 && !gameOver) player->draw();
     for (Animation& a : Animation::animations) a.draw();
@@ -101,8 +91,7 @@ void Program::Draw() {
 void Program::ManageEnemyRespawns() {
     delay = std::max(delay - 1, 0);
 
-    int speedBonus = score / 2000;
-    respawnCooldown -= (1 + speedBonus);
+    respawnCooldown -= 1;
     if (respawnCooldown <= 0) {
         respawnCooldown = 1080;
         for (std::pair<std::pair<float, float>, Enemy*>& p : Enemy::enemies) {
@@ -165,8 +154,6 @@ void Program::KeyInputs() {
     if (!paused && !startup && IsKeyPressed('O')) gameOver = !gameOver;
     if (!gameOver && !paused && IsKeyPressed('I')) startup = !startup;
     if (IsKeyPressed('H')) HitBox::drawHitbox = !HitBox::drawHitbox;
-
-    if (IsKeyPressed('K')) score += 500;
     
     if (gameOver && IsKeyPressed(KEY_ENTER)) {
         gameOver = false;
@@ -222,7 +209,5 @@ void Program::Reset() {
             new StdEnemy(x, y)
         });
     }
-    score = 0;
-    nextLifeScore = 1000;
 
 }
