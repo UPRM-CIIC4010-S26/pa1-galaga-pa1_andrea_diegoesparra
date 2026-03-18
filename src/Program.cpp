@@ -86,7 +86,7 @@ void Program::Draw() {
 
     DrawText(TextFormat("Score: %d", score), 10, 10, 24, WHITE);
     DrawText(TextFormat("Lives: %d", lives), 10, 40, 24, RED);
-    
+    DrawText(TextFormat("Respawn: %d", respawnCooldown), 10, 70, 24, GREEN);
 
     if (pauseFrames <= 0 && !gameOver) player->draw();
     for (Animation& a : Animation::animations) a.draw();
@@ -107,7 +107,7 @@ void Program::Draw() {
 void Program::ManageEnemyRespawns() {
     delay = std::max(delay - 1, 0);
 
-    respawnCooldown -= (1 + score / 2000);
+    respawnCooldown -= (1 + score / 1000);
     if (respawnCooldown <= 0) {
         respawnCooldown = 1080;
         for (std::pair<std::pair<float, float>, Enemy*>& p : Enemy::enemies) {

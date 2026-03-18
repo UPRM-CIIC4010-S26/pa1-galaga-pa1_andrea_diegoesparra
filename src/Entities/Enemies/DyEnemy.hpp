@@ -7,6 +7,7 @@ class DyEnemy : public Enemy {
         float aimAngle = 225;
         bool loop = false;
         Rectangle spriteR;
+        int getPoints() override { return 300; }
 
     public:
         DyEnemy(float x, float y) : Enemy(x, y) { 
