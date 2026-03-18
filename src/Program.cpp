@@ -68,6 +68,16 @@ void Program::Update() {
         if (lives <= 0 && pauseFrames <= 0) gameOver = true;
         Projectile::CleanProjectiles();
         Projectile::ProjectileCollision();
+        if (score >= nextLifeScore) {
+            if (lives < 5) {
+                lives++;
+            }
+            nextLifeScore += 1000;
+        }
+
+        if (lives > 5) {
+             lives = 5;
+        }
     }
 }
 
@@ -97,7 +107,7 @@ void Program::Draw() {
 void Program::ManageEnemyRespawns() {
     delay = std::max(delay - 1, 0);
 
-    respawnCooldown -= 1;
+    respawnCooldown -= (1 + score / 2000);
     if (respawnCooldown <= 0) {
         respawnCooldown = 1080;
         for (std::pair<std::pair<float, float>, Enemy*>& p : Enemy::enemies) {
@@ -160,6 +170,7 @@ void Program::KeyInputs() {
     if (!paused && !startup && IsKeyPressed('O')) gameOver = !gameOver;
     if (!gameOver && !paused && IsKeyPressed('I')) startup = !startup;
     if (IsKeyPressed('H')) HitBox::drawHitbox = !HitBox::drawHitbox;
+    if (!startup && !paused && !gameOver && IsKeyPressed(KEY_K)) score += 500;
     
     if (gameOver && IsKeyPressed(KEY_ENTER)) {
         gameOver = false;
@@ -196,6 +207,8 @@ void Program::Reset() {
     count = 0;
     delay = 0;
     lives = 3;
+    score = 0;
+    nextLifeScore = 1000;
 
     Enemy::enemies.push_back(std::pair<std::pair<float, float>, Enemy*> {
         std::pair<float, float>{350, 150},
